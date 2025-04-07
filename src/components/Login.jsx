@@ -1,19 +1,88 @@
 import React, { useRef, useState } from "react";
 import Header from "./Header";
 import { checkValidData } from "../utils/validate";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { auth } from "../utils/firebase";
+import { BG_URL, USER_AVATAR } from "../utils/constant";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const email = useRef(null);
   const password = useRef(null);
   const name = useRef(null);
 
   const handleClickButton = () => {
-    const message = checkValidData(email.current.value, password.current.value);
+    const message = checkValidData(
+      // name?.current?.value,
+      email?.current?.value,
+      password?.current?.value
+    );
     setErrorMessage(message);
     if (message) return;
+
+    if (!isSignInForm) {
+      // Sign Up Logic
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+          navigate("/browse");
+          updateProfile(user, {
+            displayName: name.current.value,
+            photoURL: USER_AVATAR,
+          })
+            .then(() => {
+              const { uid, email, displayName, photoURL } = auth.currentUser;
+              dispatch(
+                addUser({
+                  uid: uid,
+                  email: email,
+                  displayName: displayName,
+                  photoURL: photoURL,
+                })
+              );
+            })
+            .catch((error) => {
+              setErrorMessage(error.message);
+            });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + "-" + errorMessage);
+        });
+    } else {
+      // Sign In Logic
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          navigate("/browse");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + "-" + errorMessage);
+        });
+    }
   };
   const toggleSignInForm = () => {
     setIsSignInForm(!isSignInForm);
@@ -23,11 +92,7 @@ const Login = () => {
     <div>
       <Header />
       <div className="absolute">
-        <img
-          className="h-screen object-cover"
-          src="https://assets.nflxext.com/ffe/siteui/vlv3/fc164b4b-f085-44ee-bb7f-ec7df8539eff/d23a1608-7d90-4da1-93d6-bae2fe60a69b/IN-en-20230814-popsignuptwoweeks-perspective_alpha_website_large.jpg"
-          alt="BE img"
-        />
+        <img className="h-screen object-cover" src={BG_URL} alt="BE img" />
       </div>
       <form
         onSubmit={(e) => {
