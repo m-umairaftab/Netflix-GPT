@@ -4,13 +4,14 @@ export const LOGO =
 export const USER_AVATAR =
   "https://occ-0-6247-2164.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABdpkabKqQAxyWzo6QW_ZnPz1IZLqlmNfK-t4L1VIeV1DY00JhLo_LMVFp936keDxj-V5UELAVJrU--iUUY2MaDxQSSO-0qw.png?r=e6e";
 
-// export const API_OPTIONS = {
-//   method: "GET",
-//   headers: {
-//     accept: "application/json",
-//     Authorization: "Bearer " + process.env.REACT_APP_TMDB_KEY,
-//   },
-// };
+export const API_OPTIONS = {
+  method: "GET",
+  headers: {
+    accept: "application/json",
+    Authorization:
+      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4YTFiZTY5NjU3OTI1NWU0MmQyMzhlZmVlODA4NThkNSIsIm5iZiI6MTc0NDAyMzYxOS42NzcsInN1YiI6IjY3ZjNiMDQzN2I0M2JkY2UyMGFkMzNjZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.oSrnX2msArorhOz0GcF_LGYFxZVGhsxcwHCPfGL5gBo",
+  },
+};
 
 // export const IMG_CDN_URL = "https://image.tmdb.org/t/p/w500";
 
